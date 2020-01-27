@@ -2,6 +2,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -16,6 +18,7 @@ public class FormPanel extends JPanel {
 	private JTextField nameField;
 	private JTextField occupationField;
 	private JButton okBtn;
+	private FormListener formListener;
 
 	public FormPanel() {
 		Dimension dim = getPreferredSize();
@@ -28,6 +31,22 @@ public class FormPanel extends JPanel {
 		occupationField = new JTextField(10);
 
 		okBtn = new JButton("OK");
+
+		okBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String name = nameField.getText();
+				String occupation = occupationField.getText();
+
+				FormEvent ev = new FormEvent(this, name, occupation);
+				
+				if(formListener != null) {
+					formListener.formEventOcurred(ev);
+				}
+			}
+
+		});
 
 		Border innerBorder = BorderFactory.createTitledBorder("Add people");
 		Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -45,13 +64,13 @@ public class FormPanel extends JPanel {
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(nameLabel, gc);
-		
+
 		gc.gridx = 1;
 		gc.gridy = 0;
 		gc.insets = new Insets(0, 0, 0, 0);
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(nameField, gc);
-		
+
 		gc.weightx = 1;
 		gc.weighty = 0.1;
 
@@ -60,21 +79,26 @@ public class FormPanel extends JPanel {
 		gc.insets = new Insets(0, 0, 0, 5);
 		gc.anchor = GridBagConstraints.LINE_END;
 		add(occupationLabel, gc);
-		
+
 		gc.gridx = 1;
 		gc.gridy = 1;
 		gc.insets = new Insets(0, 0, 0, 0);
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(occupationField, gc);
-		
+
 		gc.weightx = 1;
 		gc.weighty = 2.0;
-		
+
 		gc.gridx = 1;
 		gc.gridy = 2;
 		gc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gc.insets = new Insets(0, 0, 0, 0);
 		add(okBtn, gc);
-
+		
 	}
+	
+	public void setFormListener(FormListener listener) {
+		this.formListener = listener;
+	}
+
 }
